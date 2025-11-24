@@ -297,7 +297,7 @@ npm run preview
 ```text
 다음 GitHub 레포를 반드시 먼저 열어서, README와 src 폴더 구조를 끝까지 읽어라.
 
-GitHub repo: <이 레포의 주소>
+GitHub repo: https://github.com/AIgement/lovable-vite-example
 
 이 레포는 "React + Vite + Tailwind FSD-lite + DDD-lite Template (PLYN v1.2 – Dark)" 이다.  
 앞으로 생성하거나 수정하는 모든 코드는 이 레포의 규칙을 하드 제약으로 취급해야 한다.  
