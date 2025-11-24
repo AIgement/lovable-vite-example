@@ -1,0 +1,29 @@
+{
+  "compilerOptions": {
+    "target": "ESNext",
+    "useDefineForClassFields": true,
+    "lib": ["DOM", "DOM.Iterable", "ESNext"],
+    "module": "ESNext",
+    "moduleResolution": "Bundler",
+    "jsx": "react-jsx",
+    "strict": true,
+    "resolveJsonModule": true,
+    "isolatedModules": true,
+    "noEmit": true,
+    "allowImportingTsExtensions": true,
+    "esModuleInterop": false,
+    "skipLibCheck": true,
+    "types": ["vite/client"],
+    "baseUrl": "src",
+    "paths": {
+      "@/*": ["*"],
+      "@app/*": ["app/*"],
+      "@pages/*": ["pages/*"],
+      "@features/*": ["features/*"],
+      "@shared/*": ["shared/*"],
+      "@styles/*": ["styles/*"]
+    }
+  },
+  "include": ["src"],
+  "references": [{ "path": "./tsconfig.node.json" }]
+}

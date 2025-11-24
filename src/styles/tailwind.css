@@ -1,0 +1,72 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+:root {
+  /* Background */
+  --bg-0: #1C2B23;
+  --bg-1: #27342D;
+  --bg-2: #2E3932;
+  --line-0: #26332C;
+  --line-1: #32423D;
+
+  /* Text */
+  --text-1: #E0E1E0;
+  --text-2: #969998;
+  --text-3: #78807C;
+
+  /* Accent & States */
+  --accent: #45C9BC;
+  --accent-hover: #33CCBD;
+  --accent-active: #27D8C7;
+  --success-aux: #73A26D;
+  --danger: #E65550;
+}
+
+body {
+  background-color: var(--bg-0);
+  color: var(--text-1);
+  font-family: "Pretendard", system-ui, -apple-system, "Segoe UI", Roboto,
+    "Noto Sans", "Apple SD Gothic Neo", "Malgun Gothic",
+    "Apple Color Emoji", "Segoe UI Emoji", sans-serif;
+}
+
+@layer base {
+  * {
+    @apply antialiased;
+  }
+}
+
+@layer components {
+  .title-display {
+    @apply text-[28px] leading-[36px] font-semibold tracking-[-0.02em];
+  }
+
+  .title-h1 {
+    @apply text-[22px] leading-[30px] font-semibold tracking-[-0.02em];
+  }
+
+  .title-h2 {
+    @apply text-[18px] leading-[26px] font-semibold tracking-[-0.02em];
+  }
+
+  .body-m {
+    @apply text-[16px] leading-[24px] font-medium tracking-[-0.03em];
+  }
+
+  .body-s {
+    @apply text-[14px] leading-[22px] font-normal tracking-[-0.03em];
+  }
+
+  .caption {
+    @apply text-[12px] leading-[18px] font-normal tracking-[-0.05em];
+  }
+
+  .card-surface {
+    @apply bg-bg1 border border-line1 rounded-card shadow-plyn;
+  }
+
+  .focus-ring {
+    @apply focus-visible:outline-none focus-visible:ring-1 focus-visible:ring-accent;
+  }
+}

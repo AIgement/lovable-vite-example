@@ -1,0 +1,28 @@
+{
+  "name": "lovable-vite-example",
+  "version": "0.1.0",
+  "private": true,
+  "type": "module",
+  "scripts": {
+    "dev": "vite",
+    "build": "tsc && vite build",
+    "preview": "vite preview"
+  },
+  "dependencies": {
+    "clsx": "^2.1.1",
+    "react": "^19.0.0",
+    "react-dom": "^19.0.0",
+    "react-router-dom": "^6.27.0"
+  },
+  "devDependencies": {
+    "@tailwindcss/postcss": "^4.1.17",
+    "@types/react": "19.2.0",
+    "@types/react-dom": "19.2.0",
+    "@vitejs/plugin-react-swc": "^3.7.0",
+    "autoprefixer": "^10.4.18",
+    "postcss": "^8.4.38",
+    "tailwindcss": "^3.4.3",
+    "typescript": "^5.4.5",
+    "vite": "^5.2.0"
+  }
+}
