@@ -1,13 +1,16 @@
-React + Vite + Tailwind FSD-lite Template (PLYN v1.2 – Dark)
+# React + Vite + Tailwind FSD-lite Template (PLYN v1.2 – Dark)
 
-프로덕션에서도 바로 쓸 수 있는 React + Vite + TypeScript + Tailwind SPA 템플릿입니다. Next.js 마이그레이션 템플릿이 아닌 순수 React Router 기반 SPA이며, 폴더 구조 / 코드 스타일 / 디자인 시스템 규칙을 Lovable 스펙으로 제공합니다.
+프로덕션에서도 바로 쓸 수 있는 React + Vite + TypeScript + Tailwind SPA 템플릿입니다.  
+Next.js 마이그레이션 템플릿이 아닌 순수 React Router 기반 SPA이며,  
+폴더 구조 / 코드 스타일 / 디자인 시스템 규칙을 Lovable 스펙으로 제공합니다.
 
-⸻
+---
 
-1. Folder structure
+## 1. Folder structure
 
 정확히 아래 구조를 사용합니다.
 
+```txt
 /src
   /app
     App.tsx
@@ -74,7 +77,7 @@ README.md
 	•	src/app: 엔트리/라우터/레이아웃/에러 바운더리를 관리하는 셸(shell) 레이어
 	•	src/pages: URL 라우트에 직접 연결되는 페이지 컴포넌트. 도메인 로직은 features 에서 import
 	•	src/features: 도메인/유스케이스 단위. 각 feature 는 ui/, model/, api/ 세 구획으로 고정되며,
-index.ts는 이 하위 폴더들 내부에만 존재 (auth/ui/index.ts 등)
+index.ts 는 이 하위 폴더들 내부에만 존재 (auth/ui/index.ts 등)
 	•	src/shared: 어디서나 재사용 가능한 UI/유틸/훅. 필요 시 각 서브폴더 내부에만 index.ts 사용
 	•	src/styles: Tailwind 엔트리와 PLYN v1.2 – Dark 토큰
 
@@ -82,7 +85,7 @@ index.ts는 이 하위 폴더들 내부에만 존재 (auth/ui/index.ts 등)
 
 2. Import direction rules
 
-허용: shared → features → pages → app (위 방향으로만 import 가능)
+허용 방향: shared → features → pages → app (위 방향으로만 import 가능)
 	•	shared → 어디서나 사용 가능 (app, pages, features)
 	•	features → app, pages 에서 사용 가능
 	•	pages → app 에서만 사용 (주로 router.tsx)
@@ -98,8 +101,8 @@ import { Sidebar } from "@/shared/ui";
 // bad (상위 레이어에서 하위 레이어를 거꾸로 import)
 import Layout from "@/app/Layout"; // features에서 app import 금지
 
-규칙 요약:
-	•	features/auth/index.ts 같은 feature 루트 barrel 파일은 만들지 않는다.
+규칙 요약
+	•	src/features/auth/index.ts 같은 feature 루트 barrel 파일은 만들지 않는다.
 	•	barrel 이 필요하면 항상 /ui/index.ts, /model/index.ts, /api/index.ts 처럼 내부 폴더에만 둔다.
 
 ⸻
@@ -107,19 +110,29 @@ import Layout from "@/app/Layout"; // features에서 app import 금지
 3. UI / Logic & Prototype boundaries
 
 Feature 내부 책임 분리 (실제 코드와 동일한 패턴):
-	•	ui/: 화면·컴포넌트 레이어. 비즈니스 로직 최소화, 필요한 데이터/핸들러는 props 로 받음.
+	•	ui/: 화면·컴포넌트 레이어. 비즈니스 로직 최소화, 필요한 데이터/핸들러는 props 로 받음
 예: LoginForm.tsx, DashboardPage.tsx
-	•	model/: 훅 기반 상태·로직 레이어. 서버 호출, 캐싱, 폼 상태, 뮤테이션 등 UI와 분리된 로직 담당.
+	•	model/: 훅 기반 상태·로직 레이어. 서버 호출, 캐싱, 폼 상태, 뮤테이션 등 UI와 분리된 로직 담당
 예: useLogin.ts, useDashboard.ts
-	•	api/: HTTP 클라이언트 래퍼, fetch/axios 호출, API 엔드포인트 정의.
+	•	api/: HTTP 클라이언트 래퍼, fetch/axios 호출, API 엔드포인트 정의
 예: authApi.ts, dashboardApi.ts
 	•	index.ts (옵션, 폴더 내부에만):
-	•	ui/index.ts: export { LoginForm } from "./LoginForm";
-	•	model/index.ts: export { useLogin } from "./useLogin";
-	•	api/index.ts: export * from "./authApi";
-	•	이렇게 세그먼트 단위 barrel만 두고, feature 루트 barrel 은 두지 않는다.
 
-Prototype Logic: 초기에는 model/ 과 api/ 에 프로토타입 수준 로직을 넣되, 실제 서비스 단계에서 점진적으로 분리/리팩터링할 수 있도록 설계합니다.
+// ui/index.ts
+export { LoginForm } from "./LoginForm";
+
+// model/index.ts
+export { useLogin } from "./useLogin";
+
+// api/index.ts
+export * from "./authApi";
+
+이렇게 세그먼트 단위 barrel만 두고, feature 루트 barrel 은 두지 않는다.
+
+Prototype Logic
+
+초기에는 model/ 과 api/ 에 프로토타입 수준 로직을 넣되,
+실제 서비스 단계에서 점진적으로 분리/리팩터링할 수 있도록 설계합니다.
 
 ⸻
 
@@ -176,9 +189,24 @@ extend: {
     successAux: "var(--success-aux)",
     danger: "var(--danger)",
   },
-  spacing: { 1:"4px",2:"8px",3:"12px",4:"16px",5:"20px",6:"24px",8:"32px",10:"40px" },
-  borderRadius: { card:"12px", field:"10px", pill:"999px" },
-  boxShadow: { plyn:"0 1px 0 rgba(0,0,0,0.18), inset 0 1px 0 rgba(255,255,255,0.02)" },
+  spacing: {
+    1: "4px",
+    2: "8px",
+    3: "12px",
+    4: "16px",
+    5: "20px",
+    6: "24px",
+    8: "32px",
+    10: "40px"
+  },
+  borderRadius: {
+    card: "12px",
+    field: "10px",
+    pill: "999px"
+  },
+  boxShadow: {
+    plyn: "0 1px 0 rgba(0,0,0,0.18), inset 0 1px 0 rgba(255,255,255,0.02)"
+  },
 }
 
 Typography (Tailwind utilities 예시)
@@ -190,7 +218,9 @@ Typography (Tailwind utilities 예시)
 .body-s        { @apply text-[14px] leading-[22px] font-normal; }
 .caption       { @apply text-[12px] leading-[18px] font-normal; }
 
-	•	Header letter-spacing ≈ -2%, Body ≈ -3%, Caption ≈ -5%
+	•	Header letter-spacing ≈ -2%
+	•	Body letter-spacing ≈ -3%
+	•	Caption letter-spacing ≈ -5%
 	•	KPI/테이블 숫자: tabular numbers 권장
 
 Spacing / Radius / Shadow
@@ -205,8 +235,13 @@ Component & Interaction rules
 	•	Primary: bg-accent / text #0E1A16 / hover:bg-accentHover
 	•	Secondary: Transparent, text-accent, border border-accent/50, hover:bg-bg2
 	•	Tertiary: Text-only text-text2, hover:text-text1
-	•	Status pills: h-6 + rounded-pill; High=#E65550, Mid=#73A26D, Info=accent (배경은 rgba 가이드 참조)
-	•	Interaction: hover → bg-bg2, focus → ring-1 ring-accent, disabled → opacity-50 cursor-not-allowed, loading → 상단 2px 로더 또는 skeleton
+	•	Status pills: h-6 + rounded-pill;
+High = #E65550, Mid = #73A26D, Info = accent (배경은 rgba 가이드 참조)
+	•	Interaction:
+	•	hover → bg-bg2
+	•	focus → ring-1 ring-accent
+	•	disabled → opacity-50 cursor-not-allowed
+	•	loading → 상단 2px 로더 또는 skeleton
 
 Layout rules (Dashboard)
 	•	Main width 1440–1600px (max-w-[1600px] mx-auto)
@@ -222,7 +257,7 @@ Layout rules (Dashboard)
 
 5.1 Barrel 파일 규칙
 
-원칙:
+원칙
 	•	feature 루트(src/features/auth/index.ts)에는 barrel 파일을 두지 않는다.
 	•	barrel 이 필요하면 항상 세그먼트 내부에만 만든다.
 
@@ -306,21 +341,24 @@ npm run preview
 	•	src/app: 엔트리, 라우터, 레이아웃, 에러 바운더리를 관리하는 셸 레이어
 	•	src/pages: URL 라우트 연결 페이지. 실제 도메인/데이터 로직은 features 에서 가져온다.
 	•	src/features: 도메인/유스케이스 단위 기능. 각 feature 안에 ui/, model/, api/ 세그먼트만 있고, barrel 은 각 세그먼트 내부에만 둔다.
-	•	src/shared: 어디서나 재사용 가능한 프레젠테이션/유틸/훅. 필요 시 /ui/index.ts, /lib/index.ts, /hooks/index.ts 사용.
+	•	src/shared: 어디서나 재사용 가능한 프레젠테이션/유틸/훅. 필요 시 ui/index.ts, lib/index.ts, hooks/index.ts 사용.
 	•	src/styles: Tailwind 엔트리, 전역 스타일, PLYN v1.2 – Dark 테마/토큰 정의.
 
 새로운 Feature 추가 가이드
 	1.	src/features/user 폴더 생성
 	2.	ui/UserList.tsx, model/useUserList.ts, api/userApi.ts 생성
 	3.	필요하다면:
-	•	ui/index.ts 에 export { UserList } from "./UserList";
-	•	model/index.ts 에 export { useUserList } from "./useUserList";
-	4.	pages 또는 app/router.tsx 에서
+
+// ui/index.ts
+export { UserList } from "./UserList";
+
+// model/index.ts
+export { useUserList } from "./useUserList";
+
+	4.	pages 또는 app/router.tsx 에서 아래처럼 사용:
 
 import { UserList } from "@/features/user/ui";
 import { useUserList } from "@/features/user/model";
-
-형태로 사용
 
 에러 처리 / 404
 	•	예상치 못한 런타임 에러: ErrorBoundary.tsx → ErrorPage.tsx 렌더
