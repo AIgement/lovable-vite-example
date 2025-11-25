@@ -1,15 +1,16 @@
-React + Vite + Tailwind FSD-lite Template (PLYN v1.2 – Dark)
+# React + Vite + Tailwind FSD-lite Template (PLYN v1.2 – Dark)
 
-프로덕션에서도 바로 쓸 수 있는 React + Vite + TypeScript + Tailwind SPA 템플릿입니다.
-Next.js 마이그레이션 템플릿이 아닌 순수 React Router 기반 SPA이며,
+프로덕션에서도 바로 쓸 수 있는 React + Vite + TypeScript + Tailwind SPA 템플릿입니다.  
+Next.js 마이그레이션 템플릿이 아닌 순수 React Router 기반 SPA이며,  
 폴더 구조 / 코드 스타일 / 디자인 시스템 규칙을 Lovable 스펙으로 제공합니다.
 
-⸻
+---
 
-1. Folder structure
+## 1. Folder structure
 
 정확히 아래 구조를 사용합니다.
 
+```text
 /src
   /app
     App.tsx
@@ -116,78 +117,27 @@ Feature 내부 책임 분리 (실제 코드와 동일한 패턴):
 	•	model/: 훅 기반 상태·로직 레이어. 서버 호출, 캐싱, 폼 상태, 뮤테이션 등 UI와 분리된 로직 담당
 	•	예: useLogin.ts, useDashboard.ts
 	•	api/: HTTP 클라이언트 래퍼, fetch/axios 호출, API 엔드포인트 정의
-	•	규칙: 한 개의 API endpoint 당 하나의 파일
-	•	파일명은 endpoint 기능을 명확히 드러내는 동사 기반 이름 사용 (login.ts, getDashboardSummary.ts, createTemporaryReceipt.ts 등)
+	•	(규칙) 한 개의 API endpoint 당 하나의 파일 (예: login.ts, getDashboardSummary.ts)
+	•	모든 API 파일 상단에 BE에게 그대로 전달 가능한 용도/타입/명세 docs(JSDoc 등)를 작성
+	•	index.ts (옵션, 폴더 내부에만):
 
-3.1 API 파일 & Docs 규칙 (BE에 그대로 전달 가능한 스펙)
+예시:
 
-모든 API 파일은 아래 규칙을 따른다.
-	1.	한 개의 파일 = 한 개의 API endpoint
-	•	하나의 URL + HTTP 메서드 조합만 담당 (POST /auth/login, GET /dashboard/summary 등)
-	•	복수 endpoint 를 묶는 “service-style” 파일(authApi.ts 안에 5개 함수 등)은 만들지 않는다.
-	2.	파일 상단에 BE와 공유 가능한 Docs 주석 필수
-	•	용도 설명
-	•	HTTP 메서드 / URL
-	•	Request 타입 (Body / Query / Path)
-	•	Response 타입 (성공/주요 필드)
-	•	주요 에러 케이스 / 상태 코드
-	3.	Docs 형식 예시 (JSDoc 스타일, BE에게 그대로 전달 가능)
+// ui/index.ts
+export { LoginForm } from "./LoginForm";
 
-// src/features/auth/api/login.ts
-/**
- * Auth - 로그인 API
- *
- * [HTTP]
- * - POST /auth/login
- *
- * [Request Body]
- * - email: string (user email)
- * - password: string (plain password)
- *
- * [Response 200]
- * - accessToken: string (JWT)
- * - refreshToken: string
- * - user: {
- *     id: string;
- *     name: string;
- *     email: string;
- *     roles: string[];
- *   }
- *
- * [Error]
- * - 400: INVALID_CREDENTIALS (이메일 또는 비밀번호 불일치)
- * - 429: TOO_MANY_ATTEMPTS (로그인 시도 제한 초과)
- */
-export type LoginRequest = {
-  email: string;
-  password: string;
-};
+// model/index.ts
+export { useLogin } from "./useLogin";
 
-export type LoginResponse = {
-  accessToken: string;
-  refreshToken: string;
-  user: {
-    id: string;
-    name: string;
-    email: string;
-    roles: string[];
-  };
-};
+// api/index.ts
+export * from "./login";
 
-export async function loginApi(
-  payload: LoginRequest
-): Promise<LoginResponse> {
-  // 여기의 URL, 메서드, 타입을 BE에 그대로 전달해
-  // FastAPI 등의 스펙으로 변환하여 구현하도록 한다.
-}
-
-이 패턴대로 작성하면, 해당 파일(또는 상단 주석 블록)만 그대로 BE에게 전달하면 API 명세서 역할을 할 수 있다.
+이렇게 세그먼트 단위 barrel만 두고, feature 루트 barrel 은 두지 않는다.
 
 Prototype Logic
 
 초기에는 model/ 과 api/ 에 프로토타입 수준 로직을 넣되,
 실제 서비스 단계에서 점진적으로 분리/리팩터링할 수 있도록 설계합니다.
-API 스펙이 안정되면, 각 api/*.ts 파일의 Docs 블록을 기준으로 별도 API 문서화 도구(Swagger, Stoplight 등)와 동기화해도 된다.
 
 ⸻
 
@@ -318,7 +268,6 @@ Layout rules (Dashboard)
 원칙
 	•	feature 루트(src/features/auth/index.ts)에는 barrel 파일을 두지 않는다.
 	•	barrel 이 필요하면 항상 세그먼트 내부에만 만든다.
-	•	api/ 폴더 안에서 barrel 은 여러 API 파일(각각 한 endpoint)의 집합을 재export 하는 용도로만 사용한다.
 
 예시:
 
@@ -329,8 +278,7 @@ export { LoginForm } from "./LoginForm";
 export { useLogin } from "./useLogin";
 
 // src/features/auth/api/index.ts
-export * from "./login";            // 한 파일 = 한 endpoint
-// export * from "./refreshToken";  // 필요 시 다른 endpoint 파일 추가
+export * from "./login";
 
 // src/shared/ui/index.ts
 export { Button } from "./Button";
@@ -401,56 +349,12 @@ npm run preview
 	•	src/app: 엔트리, 라우터, 레이아웃, 에러 바운더리를 관리하는 셸 레이어
 	•	src/pages: URL 라우트 연결 페이지. 실제 도메인/데이터 로직은 features 에서 가져온다.
 	•	src/features: 도메인/유스케이스 단위 기능. 각 feature 안에 ui/, model/, api/ 세그먼트만 있고, barrel 은 각 세그먼트 내부에만 둔다.
-	•	api/ 내 각 파일은 한 개의 API endpoint 만 담당하며,
-파일 상단의 주석 Docs 를 통해 BE와 공유 가능한 스펙을 반드시 명시한다.
 	•	src/shared: 어디서나 재사용 가능한 프레젠테이션/유틸/훅. 필요 시 ui/index.ts, lib/index.ts, hooks/index.ts 사용.
 	•	src/styles: Tailwind 엔트리, 전역 스타일, PLYN v1.2 – Dark 테마/토큰 정의.
 
 새로운 Feature 추가 가이드
 	1.	src/features/user 폴더 생성
 	2.	ui/UserList.tsx, model/useUserList.ts, api/getUserList.ts 생성
-
-// src/features/user/api/getUserList.ts
-/**
- * User - 목록 조회 API
- *
- * [HTTP]
- * - GET /users
- *
- * [Query]
- * - page?: number
- * - pageSize?: number
- *
- * [Response 200]
- * - items: Array<{
- *     id: string;
- *     name: string;
- *     email: string;
- *   }>
- * - totalCount: number
- */
-export type GetUserListQuery = {
-  page?: number;
-  pageSize?: number;
-};
-
-export type GetUserListResponse = {
-  items: {
-    id: string;
-    name: string;
-    email: string;
-  }[];
-  totalCount: number;
-};
-
-export async function getUserListApi(
-  query: GetUserListQuery
-): Promise<GetUserListResponse> {
-  // 여기에 정의한 스펙을 BE에게 전달하고,
-  // 실제 URL/응답 구조는 이 타입에 맞게 구현하도록 협의한다.
-}
-
-
 	3.	필요하다면:
 
 // ui/index.ts
@@ -467,9 +371,6 @@ export * from "./getUserList";
 import { UserList } from "@/features/user/ui";
 import { useUserList } from "@/features/user/model";
 
-이렇게 하면 각 API 파일이 곧 BE와 공유할 수 있는 사양서 역할을 하며,
-FE/BE 간 커뮤니케이션은 “해당 파일 상단 Docs + 타입 정의”를 기준으로 진행할 수 있다.
-
 에러 처리 / 404
 	•	예상치 못한 런타임 에러: ErrorBoundary.tsx → ErrorPage.tsx 렌더
 	•	존재하지 않는 경로: NotFoundPage.tsx 렌더
@@ -479,8 +380,7 @@ FE/BE 간 커뮤니케이션은 “해당 파일 상단 Docs + 타입 정의”�
 7. Lovable Prompt Example
 
 아래 프롬프트는 Lovable에게 이 레포를 “하드 스펙”으로 사용하라고 지시할 때 그대로 사용할 수 있는 예시입니다.
-index.ts 관련 규칙도 세그먼트 내부에만 허용하는 쪽으로,
-그리고 한 개의 API당 하나의 파일 + Docs 필수 규칙을 반영했습니다.
+index.ts 관련 규칙도 세그먼트 내부에만 허용하는 쪽으로 수정되었습니다.
 
 다음 GitHub 레포를 반드시 먼저 열어서, README와 src 폴더 구조를 끝까지 읽어라.
 
@@ -511,14 +411,6 @@ README 내용은 참고가 아니라 “스펙”이다.
    - 화면 컴포넌트는 ui/
    - index.ts 는 feature 루트가 아니라  
      각 세그먼트 내부(ui/index.ts, model/index.ts, api/index.ts)에만 둘 수 있다.
-   - api/ 폴더 안에서는 **"한 개의 API endpoint 당 하나의 파일"** 규칙을 지킨다.
-     예) login.ts, getDashboardSummary.ts, createTemporaryReceipt.ts 등.
-   - 각 api/*.ts 파일 상단에는 BE에게 그대로 전달 가능한 Docs(JSDoc 또는 주석)를 작성해야 한다.
-     - 용도 설명
-     - HTTP 메서드 / URL
-     - Request 타입(Body/Query/Path)
-     - Response 타입(주요 필드)
-     - 주요 에러 케이스 / 상태 코드
 
 3. Import 방향 규칙 고정  
    - shared → features → pages → app 방향으로만 import 허용  
@@ -552,9 +444,6 @@ README 내용은 참고가 아니라 “스펙”이다.
    - feature 파일 구조를 위반하지 않는가?
    - 디자인 토큰을 하드코딩하지 않는가?
    - index.ts 를 feature 루트가 아니라 /ui, /model, /api 내부에만 두고 있는가?
-   - api/ 폴더에서 한 파일에 여러 endpoint 를 넣지 않고
-     한 개의 API endpoint 당 하나의 파일만 두고 있는가?
-   - 각 api/*.ts 상단에 BE에게 전달 가능한 Docs를 작성했는가?
 
 3) 체크리스트 통과 후에만 코드를 생성하라.  
    통과하지 못하면 코드를 생성하지 말고 “어떤 제약이 막고 있는지” 알려라.
@@ -570,3 +459,4 @@ README의 모든 규칙을 절대적으로 지키면서
 --- 아래에 이번 작업의 요구사항을 붙여 넣으시오 ---
 
 <여기에 기능 요구사항을 붙이세요>
+
